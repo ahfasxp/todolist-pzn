@@ -1,0 +1,126 @@
+<!-- FILEPATH: /Users/ahfasxp/Documents/Developments/JavaScript/todolist/todolist.html -->
+<!--
+This HTML file contains a simple todo list application. It has a form to add new todos, a search bar to filter todos, and a table to display the todos. The table has two columns, one for the todo description and the other for a "Done" button to remove the todo from the list. The application uses JavaScript to manipulate the DOM and store the todos in an array. The todos are displayed in the table based on the search bar input. 
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form name="todoForm">
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <label for="todo">Todo</label>
+            </td>
+            <td>
+              <input type="text" name="todo" id="todo" />
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" value="Add" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+
+    <h1>Todolist</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Filter:</th>
+          <th><input type="text" name="search" id="search" /></th>
+        </tr>
+      </thead>
+      <tbody id="todolistBody">
+        <tr>
+          <td>
+            <input type="button" value="Done" />
+          </td>
+          <td>Todo Description</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+      const todolist = [];
+
+      function clearTodolist() {
+        const todolistBody = document.getElementById("todolistBody");
+        while (todolistBody.firstChild) {
+          todolistBody.removeChild(todolistBody.firstChild);
+        }
+      }
+
+      function addTodolist(index, todo) {
+        const tr = document.createElement("tr");
+
+        const tdButton = document.createElement("td");
+        tr.appendChild(tdButton);
+
+        const buttonDone = document.createElement("input");
+        buttonDone.type = "button";
+        buttonDone.value = "Done";
+        buttonDone.onclick = function () {
+          removeTodolist(todolist.indexOf(todo));
+        };
+        tdButton.appendChild(buttonDone);
+
+        const tdTodo = document.createElement("td");
+        tdTodo.textContent = todo;
+        tr.appendChild(tdTodo);
+
+        document.getElementById("todolistBody").appendChild(tr);
+      }
+
+      function removeTodolist(index) {
+        todolist.splice(index, 1);
+        displayTodolist();
+      }
+
+      function displayTodolist() {
+        clearTodolist();
+
+        for (let i = 0; i < todolist.length; i++) {
+          const todo = todolist[i];
+
+          const search = document.getElementById("search").value.toLowerCase();
+
+          if (todo.toLowerCase().includes(search)) {
+            addTodolist(i, todo);
+          }
+        }
+      }
+
+      document.forms["todoForm"].onsubmit = function (e) {
+        e.preventDefault();
+
+        const todo = document.forms["todoForm"]["todo"].value;
+        todolist.push(todo);
+
+        document.forms["todoForm"].reset();
+
+        console.log(todolist);
+        displayTodolist();
+      };
+
+      document.getElementById("search").onkeyup = function () {
+        displayTodolist();
+      };
+
+      document.getElementById("search").onkeydown = function () {
+        displayTodolist();
+      };
+
+      displayTodolist();
+    </script>
+  </body>
+</html>
